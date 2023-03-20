@@ -200,8 +200,10 @@ int main()
 }
 
 
+//This function is responsible for adding tweets entered by the user. 
 int doAddTweet(Tweet timeline[], int& usedSize)
 {
+	//The program checks to make sure there is still room in the array and if not then the program tells the user that they have reached the limit and returns an error.
 	if (usedSize >= CAPACITY)
 	{
 		cout << "\nTweet limit reached\n";
@@ -209,6 +211,7 @@ int doAddTweet(Tweet timeline[], int& usedSize)
 	}
 	else
 	{
+		//If there is still room left, the program will prompt the user to enter a new tweet and automatically assign an ID.
 		cout << "Enter tweet: \n";
 		cin >> timeline[usedSize].msg;
 		timeline[usedSize].likes = 0;
@@ -218,11 +221,11 @@ int doAddTweet(Tweet timeline[], int& usedSize)
 	}	
 }
 
-
+//This function enables the user to edit a tweet they have previously written. The user enters the ID of the tweet they wish to edit and are prompted to rewrite the tweet.
 void doEditTweet(Tweet timeline[], int usedSize, int selected)
 {
 	int pos = 0;
-
+	//This checks to make sure the ID is valid and prompts the user to edit if it is and loops back to prompt the user to enter a new ID.
 	if (selected >= 100 && selected < getNextId(timeline, usedSize))
 	{
 		for (int i = 0; i < CAPACITY; i++)
@@ -237,15 +240,16 @@ void doEditTweet(Tweet timeline[], int usedSize, int selected)
 	}
 	else
 	{
+		//If the ID does not exist or is invalid, then the user is notified.
 		cout << "\nInvalid ID.\n";
 	}
 }
 
-
+//This function incriments a like counter every time it is run.
 void doLikeTweet(Tweet timeline[], int usedSize, int selected)
 {
 	int pos = 0;
-
+	//This checks to make sure the ID is valid and prompts the user to edit if it is and loops back to prompt the user to enter a new ID.
 	if (selected >= 100 && selected < getNextId(timeline, usedSize))
 	{
 		for (int i = 0; i < CAPACITY; i++)
@@ -255,11 +259,12 @@ void doLikeTweet(Tweet timeline[], int usedSize, int selected)
 				pos = i;
 			}
 		}
-
+		//Incriments the like counter of the selected tweet.
 		timeline[pos].likes++;
 	}
 	else
 	{
+		//If the ID does not exist or is invalid, then the user is notified.
 		cout << "\nInvalid ID.\n";
 	}
 }
@@ -267,18 +272,21 @@ void doLikeTweet(Tweet timeline[], int usedSize, int selected)
 
 void displayTimeline(const Tweet timeline[], int usedSize, int selected)
 {
+	//Format of display timeline for tweets
 	printf("%s\n", "sel\tID\tLikes\tTweet\n");
 
+	//Iterate through all of the tweets in the timeline array 
 	for (int i = 0; i < usedSize; i++)
 	{
 
 		if (timeline[i].id > 0)
 		{
-			if (timeline[i].id == selected)
+			if (timeline[i].id == selected) //If the ID is selected, print an arrow
 			{
 				printf("-->");
 			}
 
+			//For all tweets, print the ID, likes, and the message of the tweet
 			printf("\t%d", timeline[i].id);
 			printf("\t%d", timeline[i].likes);
 			printf("\t%s\n", timeline[i].msg);
@@ -288,22 +296,23 @@ void displayTimeline(const Tweet timeline[], int usedSize, int selected)
 	cout << "\n";
 }
 
-
+//Initializes some hard coded tweets for testing purposes.
 int addTweet(Tweet timeline[], int& usedSize, const char message[])
 {
+	//If the number of tweets is more than what's acceptable (10), then don't add any
 	if (usedSize >= CAPACITY)
 	{
 		return -1;
 	}
-	else
+	else // Otherwise, add the hard-coded messages
 	{
-		for (int i = 0; i < MSGSIZE; i++)
+		for (int i = 0; i < MSGSIZE; i++) //Iterate through the message character by character and add to the message part of respective tweet
 		{
 			timeline[usedSize].msg[i] = message[i];
 		}
-		timeline[usedSize].likes = 0;
-		timeline[usedSize].id = getNextId(timeline, usedSize);
-		usedSize++;
+		timeline[usedSize].likes = 0; //Set likes to 0
+		timeline[usedSize].id = getNextId(timeline, usedSize); //Add ID using the getNextId function
+		usedSize++; //Add "1" to the usedSize variable for one more variable has been added 
 	}
 }
 
@@ -311,11 +320,13 @@ int addTweet(Tweet timeline[], int& usedSize, const char message[])
 int getNextId(Tweet timeline[], int usedSize)
 {
 	int nextID = 0;
+
+	//If there are no tweets in the array, return 100 (which equals to first position in the array)
 	if (usedSize == 0)
 	{
 		return 100;
 	}
-	for (int i = 0; i < usedSize; i++)
+	for (int i = 0; i < usedSize; i++) //Iterate through all of the tweets and add one to the next ID for the next tweet
 	{
 		nextID = timeline[i].id + 1;
 	}
@@ -325,10 +336,13 @@ int getNextId(Tweet timeline[], int usedSize)
 
 void doDeleteTweet(Tweet timeline[], int& usedSize, int& selected)
 {
+	//Variable for storing the position of the tweet to be deleted
 	int pos = 0;
 
+	//If the selected tweet has a valid ID that is in between 100 and the highest ID possible,
 	if (selected >= 100 && selected < getNextId(timeline, usedSize))
 	{
+		//Then look for the selected Tweet's posiiton in the array
 		for (int i = 0; i < CAPACITY; i++)
 		{
 			if (timeline[i].id == selected)
@@ -337,14 +351,17 @@ void doDeleteTweet(Tweet timeline[], int& usedSize, int& selected)
 			}
 		}
 
+		//Afterwards, move all of the positions of the tweet info. forward 
+		//so that the selected tweet will no longer be included
 		for (int i = pos; i < CAPACITY; i++)
 		{
 			timeline[i] = timeline[i + 1];
 		}
+		//Reduce size by 1 and set the selected tweet to none
 		usedSize--;
 		selected = -1;
 	}
-	else
+	else //If the tweet's ID is invalid, then return this statement and ask for an ID again
 	{
 		cout << "\nInvalid ID.\n";
 	}
@@ -355,9 +372,11 @@ int selectTweet(const Tweet timeline[], int usedSize)
 {
 	int userSelect = 0;
 
+	// User will select the tweet they want
 	cout << "Enter ID: ";
 	cin >> userSelect;
 
+	//If the user enters an invalid ID, then continue to ask for a valid one
 	while (cin.fail())
 	{
 		cin.clear();
@@ -366,7 +385,7 @@ int selectTweet(const Tweet timeline[], int usedSize)
 		cin >> userSelect;
 	}
 
-
+	//Iterate through the tweets and if the ID selected matches, then return the ID of the selected tweet
 	for (int i = 0; i < usedSize; i++)
 	{
 		if (timeline[i].id == userSelect)
@@ -375,6 +394,7 @@ int selectTweet(const Tweet timeline[], int usedSize)
 		}
 	}
 	
+	//If ID is invalid, then print that the ID was not found and return a -1 (to signify that it wasn't a valid ID)
 	cout << "\nID not found.\n";
 	return -1;
 }
