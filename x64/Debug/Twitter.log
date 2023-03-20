@@ -1,2 +1,4 @@
 ﻿  Twitter.cpp
-  Twitter.vcxproj -> C:\Users\Imprudentpilot9\Desktop\Twitter_WIP\x64\Debug\Twitter.exe
+C:\Users\cryst\Documents\TwitterProject\Twitter.cpp(219): warning C4715: 'doAddTweet': not all control paths return a value
+C:\Users\cryst\Documents\TwitterProject\Twitter.cpp(308): warning C4715: 'addTweet': not all control paths return a value
+  Twitter.vcxproj -> C:\Users\cryst\Documents\TwitterProject\x64\Debug\Twitter.exe

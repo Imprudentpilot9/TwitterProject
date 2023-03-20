@@ -136,7 +136,7 @@ int main()
 
 	do
 	{
-		cout << "1. Display Timeline\n";
+		cout << "\n1. Display Timeline\n";
 		cout << "2. Select Tweet\n";
 		cout << "3. Add New Tweet\n";
 		cout << "4. Edit Selected Tweet\n";
@@ -179,7 +179,9 @@ int main()
 			// if tweet was added, make it be the selected tweet;
 			// otherwise leave it unchanged
 			if (tmp > -1)
+			{
 				selected = tmp;
+			}
 			break;
 		case 4:
 			doEditTweet(timeline, usedSize, selected);
@@ -200,59 +202,179 @@ int main()
 
 int doAddTweet(Tweet timeline[], int& usedSize)
 {
-	// TODO: Write code for the function
-
-	timeline[usedSize].msg = 
-	return -1;
+	if (usedSize >= CAPACITY)
+	{
+		cout << "\nTweet limit reached\n";
+		return -1;
+	}
+	else
+	{
+		cout << "Enter tweet: \n";
+		cin >> timeline[usedSize].msg;
+		timeline[usedSize].likes = 0;
+		timeline[usedSize].id = getNextId(timeline, usedSize);
+		usedSize++;
+		cout << endl;
+	}	
 }
 
 
 void doEditTweet(Tweet timeline[], int usedSize, int selected)
 {
-	// TODO: Write code for the function
+	int pos = 0;
+
+	if (selected >= 100 && selected < getNextId(timeline, usedSize))
+	{
+		for (int i = 0; i < CAPACITY; i++)
+		{
+			if (timeline[i].id == selected)
+			{
+				pos = i;
+			}
+		}
+
+		cin >> timeline[pos].msg;
+	}
+	else
+	{
+		cout << "\nInvalid ID.\n";
+	}
 }
 
 
 void doLikeTweet(Tweet timeline[], int usedSize, int selected)
 {
-	// TODO: Write code for the function
+	int pos = 0;
+
+	if (selected >= 100 && selected < getNextId(timeline, usedSize))
+	{
+		for (int i = 0; i < CAPACITY; i++)
+		{
+			if (timeline[i].id == selected)
+			{
+				pos = i;
+			}
+		}
+
+		timeline[pos].likes++;
+	}
+	else
+	{
+		cout << "\nInvalid ID.\n";
+	}
 }
 
 
 void displayTimeline(const Tweet timeline[], int usedSize, int selected)
 {
-	// TODO: Write code for the function
+	printf("%s\n", "sel\tID\tLikes\tTweet\n");
+
 	for (int i = 0; i < usedSize; i++)
 	{
-		cout << timeline[i].msg;
+
+		if (timeline[i].id > 0)
+		{
+			if (timeline[i].id == selected)
+			{
+				printf("-->");
+			}
+
+			printf("\t%d", timeline[i].id);
+			printf("\t%d", timeline[i].likes);
+			printf("\t%s\n", timeline[i].msg);
+		}
+
 	}
+	cout << "\n";
 }
 
 
 int addTweet(Tweet timeline[], int& usedSize, const char message[])
 {
-	// TODO: Write code for the function
-	return -1;
+	if (usedSize >= CAPACITY)
+	{
+		return -1;
+	}
+	else
+	{
+		for (int i = 0; i < MSGSIZE; i++)
+		{
+			timeline[usedSize].msg[i] = message[i];
+		}
+		timeline[usedSize].likes = 0;
+		timeline[usedSize].id = getNextId(timeline, usedSize);
+		usedSize++;
+	}
 }
 
 
 int getNextId(Tweet timeline[], int usedSize)
 {
-	// TODO: Write code for the function
-	return 100;
+	int nextID = 0;
+	if (usedSize == 0)
+	{
+		return 100;
+	}
+	for (int i = 0; i < usedSize; i++)
+	{
+		nextID = timeline[i].id + 1;
+	}
+	return nextID;
 }
 
 
 void doDeleteTweet(Tweet timeline[], int& usedSize, int& selected)
 {
-	// TODO: Write code for the function
+	int pos = 0;
+
+	if (selected >= 100 && selected < getNextId(timeline, usedSize))
+	{
+		for (int i = 0; i < CAPACITY; i++)
+		{
+			if (timeline[i].id == selected)
+			{
+				pos = i;
+			}
+		}
+
+		for (int i = pos; i < CAPACITY; i++)
+		{
+			timeline[i] = timeline[i + 1];
+		}
+		usedSize--;
+		selected = -1;
+	}
+	else
+	{
+		cout << "\nInvalid ID.\n";
+	}
 }
 
 
 int selectTweet(const Tweet timeline[], int usedSize)
 {
-	// TODO: Write code for the function
+	int userSelect = 0;
+
+	cout << "Enter ID: ";
+	cin >> userSelect;
+
+	while (cin.fail())
+	{
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Enter ID: ";
+		cin >> userSelect;
+	}
+
+
+	for (int i = 0; i < usedSize; i++)
+	{
+		if (timeline[i].id == userSelect)
+		{
+			return userSelect;
+		}
+	}
 	
-	
+	cout << "\nID not found.\n";
 	return -1;
 }
