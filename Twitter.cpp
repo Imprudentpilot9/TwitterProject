@@ -213,7 +213,7 @@ int doAddTweet(Tweet timeline[], int& usedSize)
 	{
 		//If there is still room left, the program will prompt the user to enter a new tweet and automatically assign an ID.
 		cout << "Enter tweet: \n";
-		cin >> timeline[usedSize].msg;
+		cin.getline(timeline[usedSize].msg, MSGSIZE);
 		timeline[usedSize].likes = 0;
 		timeline[usedSize].id = getNextId(timeline, usedSize);
 		usedSize++;
@@ -236,7 +236,7 @@ void doEditTweet(Tweet timeline[], int usedSize, int selected)
 			}
 		}
 
-		cin >> timeline[pos].msg;
+		cin.getline(timeline[pos].msg, MSGSIZE);
 	}
 	else
 	{
